@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pharmacy Management & Stock Portal</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen p-4 sm:p-8">
+
+  <div class="max-w-4xl mx-auto space-y-6">
+    
+    <header class="text-center space-y-2">
+      <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+        Pharmacy Owner Portal
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Register Pharmacy & Update Inventory</h1>
+      <p class="text-slate-500">Provide license details, location, and upload live medicine stock</p>
+    </header>
+
+    <form id="pharmacyForm" onsubmit="handleFormSubmit(event)" class="space-y-6">
+      
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+        <h2 class="text-xl font-bold text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
+          🏛️ Pharmacy Registration & Location
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Pharmacy / Shop Name</label>
+            <input 
+              type="text" 
+              id="shopName" 
+              required 
+              placeholder="e.g. Gramin Lifeline Medicals" 
+              class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Drug License Number</label>
+            <input 
+              type="text" 
+              id="drugLicense" 
+              required 
+              placeholder="e.g. DL-20B/12345/2026" 
+              class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Contact Phone Number</label>
+            <input 
+              type="tel" 
+              id="contactPhone" 
+              required 
+              placeholder="e.g. +91 9876543210" 
+              class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Area Region</label>
+            <select id="areaType" class="w-full p-3 border border-slate-200 rounded-xl outline-none bg-white focus:ring-2 focus:ring-emerald-500">
+              <option value="Rural">Rural Area</option>
+              <option value="Semi-Urban">Semi-Urban Area</option>
+              <option value="Urban">Urban Area</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Latitude</label>
+            <input 
+              type="number" 
+              step="any" 
+              id="lat" 
+              required 
+              placeholder="e.g. 17.3850" 
+              class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Longitude</label>
+            <input 
+              type="number" 
+              step="any" 
+              id="lng" 
+              required 
+              placeholder="e.g. 78.4867" 
+              class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+        </div>
+
+        <button 
+          type="button" 
+          onclick="getShopCoordinates()" 
+          class="text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg transition"
+        >
+          📍 Autofill Coordinates using GPS
+        </button>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+        <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+          <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+            💊 Medicine Stock Inventory
+          </h2>
+          <button 
+            type="button" 
+            onclick="addMedicineRow()" 
+            class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg text-xs transition border border-emerald-200"
+          >
+            + Add Medicine
+          </button>
+        </div>
+
+        <div id="medicineList" class="space-y-3">
+          </div>
+      </div>
+
+      <button 
+        type="submit" 
+        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-xl transition shadow-md"
+      >
+        Save & Update Pharmacy Data
+      </button>
+
+    </form>
+
+    <div id="previewSection" class="hidden bg-slate-900 text-slate-100 p-6 rounded-2xl space-y-2">
+      <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-400">JSON Payload Output (Ready for Backend)</h3>
+      <pre id="jsonPreview" class="text-xs overflow-x-auto font-mono text-slate-300"></pre>
+    </div>
+
+  </div>
+
+  <script>
+    // --- 1. INITIAL MEDICINE ROW SETUP ---
+    function addMedicineRow(name = "", stock = "", unit = "tablets") {
+      const container = document.getElementById('medicineList');
+      const rowId = Date.now() + Math.random();
+
+      const row = document.createElement('div');
+      row.className = "medicine-row flex flex-col sm:flex-row items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200";
+      row.id = `row-${rowId}`;
+
+      row.innerHTML = `
+        <div class="flex-1 w-full">
+          <input 
+            type="text" 
+            placeholder="Medicine Name (e.g., Paracetamol)" 
+            value="${name}" 
+            required 
+            class="med-name w-full p-2.5 text-sm border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-emerald-500"
+          />
+        </div>
+        <div class="w-full sm:w-32">
+          <input 
+            type="number" 
+            placeholder="Quantity" 
+            value="${stock}" 
+            min="0" 
+            required 
+            class="med-stock w-full p-2.5 text-sm border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-emerald-500"
+          />
+        </div>
+        <div class="w-full sm:w-32">
+          <select class="med-unit w-full p-2.5 text-sm border border-slate-200 rounded-lg outline-none bg-white focus:ring-2 focus:ring-emerald-500">
+            <option value="tablets" ${unit === 'tablets' ? 'selected' : ''}>Tablets</option>
+            <option value="vials" ${unit === 'vials' ? 'selected' : ''}>Vials</option>
+            <option value="strips" ${unit === 'strips' ? 'selected' : ''}>Strips</option>
+            <option value="packets" ${unit === 'packets' ? 'selected' : ''}>Packets</option>
+            <option value="bottles" ${unit === 'bottles' ? 'selected' : ''}>Bottles</option>
+          </select>
+        </div>
+        <button 
+          type="button" 
+          onclick="removeMedicineRow('row-${rowId}')" 
+          class="text-rose-600 hover:bg-rose-50 p-2 rounded-lg text-xs font-bold border border-rose-200 w-full sm:w-auto"
+        >
+          Remove
+        </button>
+      `;
+
+      container.appendChild(row);
+    }
+
+    function removeMedicineRow(rowId) {
+      const row = document.getElementById(rowId);
+      if (document.querySelectorAll('.medicine-row').length > 1) {
+        row.remove();
+      } else {
+        alert("At least one medicine row must be maintained.");
+      }
+    }
+
+    // --- 2. GPS AUTOFILL ---
+    function getShopCoordinates() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            document.getElementById('lat').value = position.coords.latitude;
+            document.getElementById('lng').value = position.coords.longitude;
+          },
+          () => alert("Permission denied or location unavailable.")
+        );
+      } else {
+        alert("Geolocation is not supported by your browser.");
+      }
+    }
+
+    // --- 3. FORM SUBMISSION & DATA COLLECTION ---
+    function handleFormSubmit(event) {
+      event.preventDefault();
+
+      // Gather Medicine Inventory Data
+      const medicineRows = document.querySelectorAll('.medicine-row');
+      const medicinesInventory = [];
+
+      medicineRows.forEach(row => {
+        const name = row.querySelector('.med-name').value.trim();
+        const stock = parseInt(row.querySelector('.med-stock').value, 10);
+        const unit = row.querySelector('.med-unit').value;
+
+        if (name) {
+          medicinesInventory.push({ name, stock, unit });
+        }
+      });
+
+      // Assemble Pharmacy Payload
+      const pharmacyData = {
+        name: document.getElementById('shopName').value.trim(),
+        drugLicenseNumber: document.getElementById('drugLicense').value.trim(),
+        phone: document.getElementById('contactPhone').value.trim(),
+        areaType: document.getElementById('areaType').value,
+        location: {
+          lat: parseFloat(document.getElementById('lat').value),
+          lng: parseFloat(document.getElementById('lng').value)
+        },
+        inventory: medicinesInventory
+      };
+
+      // Preview Data Output
+      document.getElementById('previewSection').classList.remove('hidden');
+      document.getElementById('jsonPreview').innerText = JSON.stringify(pharmacyData, null, 2);
+    }
+
+    // Initialize with two default rows
+    addMedicineRow("Paracetamol", 50, "tablets");
+    addMedicineRow("Insulin", 5, "vials");
+  </script>
+</body>
+</html>

@@ -5,10 +5,9 @@ A web-based healthcare management system developed as a Final Year Diploma Proje
 ## 🚀 Features
 
 - 👤 Patient Registration
-- 👨‍⚕️ Doctor Management
-- 📅 Appointment Booking
+- 👨‍⚕️ Pharmacy Registration
 - 🔐 Login Authentication
-- 🗂️ Medical Records Management
+- 🗂️ Drug License Verification
 
 ## 🛠️ Technologies Used
 
@@ -31,5 +30,4 @@ MedConnect/
 - static/
 
 ## 👥 Team
-
 Final Year Diploma CSE Project

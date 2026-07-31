@@ -1,286 +1,378 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MedConnect - Nearby Pharmacy Stock Finder</title>
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedConnect - Pharmacy & Medicine Finder</title>
+  <style>
+    /* Reset & Base Layout */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f4f7f6;
+      color: #333;
+    }
+
+    /* Header & Navigation */
+    header {
+      background-color: #0077b6;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-login {
+      background-color: #00b4d8;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-login:hover {
+      background-color: #90e0ef;
+      color: #0077b6;
+    }
+
+    /* Search & Filter Section */
+    .hero-search {
+      background: white;
+      padding: 2.5rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .hero-search h1 {
+      color: #0077b6;
+      margin-bottom: 0.5rem;
+    }
+
+    .search-box {
+      margin: 1.5rem auto 0;
+      max-width: 600px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 0.8rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .search-box button {
+      padding: 0.8rem 1.5rem;
+      background-color: #023e8a;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* Pharmacy List Grid */
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .section-title {
+      margin-bottom: 1rem;
+      color: #023e8a;
+    }
+
+    .pharmacy-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .pharmacy-card {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .pharmacy-card h3 {
+      color: #0077b6;
+      margin-bottom: 0.3rem;
+    }
+
+    .pharmacy-card .distance {
+      font-size: 0.9rem;
+      color: #777;
+      margin-bottom: 1rem;
+    }
+
+    .stock-list {
+      list-style: none;
+      margin-bottom: 1.2rem;
+      border-top: 1px solid #eee;
+      padding-top: 0.8rem;
+    }
+
+    .stock-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .badge {
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .in-stock {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .low-stock {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    .out-stock {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .btn-reserve {
+      width: 100%;
+      padding: 0.6rem;
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* Modal Styling */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 320px;
+      position: relative;
+    }
+
+    .modal-content h2 {
+      margin-bottom: 1rem;
+      color: #0077b6;
+    }
+
+    .modal-content input {
+      width: 100%;
+      padding: 0.7rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #aaa;
+    }
+  </style>
 </head>
-<body class="bg-slate-50 min-h-screen p-4 sm:p-8">
+<body>
 
-  <div class="max-w-4xl mx-auto space-y-6">
+  <header>
+    <div class="logo">MedConnect</div>
+    <div class="user-section">
+      <span id="userGreeting">Guest</span>
+      <button class="btn-login" id="authBtn" onclick="toggleAuth()">Login</button>
+    </div>
+  </header>
+
+  <section class="hero-search">
+    <h1>Find Medicines Near You</h1>
+    <p>Check live stock availability at local pharmacies</p>
     
-    <header class="text-center space-y-2">
-      <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
-        Rural & Regional Portal
-      </span>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Find Medicines Nearby 🚑</h1>
-      <p class="text-slate-500">Live stock updates for local pharmacies within your area</p>
-    </header>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Enter medicine name (e.g., Paracetamol, Amoxicillin)..." />
+      <button onclick="filterPharmacies()">Search Stock</button>
+    </div>
+  </section>
 
-    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
-      <div class="flex flex-col sm:flex-row gap-3">
-        <input 
-          type="text" 
-          id="searchInput" 
-          placeholder="Type medicine name (e.g., Paracetamol, Insulin, ORS)..." 
-          class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 text-slate-700 placeholder-slate-400"
-          oninput="handleSearch()"
-        />
-        <button 
-          onclick="handleSearch()" 
-          class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3 rounded-xl transition shadow-sm"
-        >
-          Search
-        </button>
+  <main class="container">
+    <h2 class="section-title">Nearby Pharmacies & Live Stock</h2>
+    <div class="pharmacy-grid" id="pharmacyGrid">
+      
+      <div class="pharmacy-card">
+        <div>
+          <h3>Care Plus Pharmacy</h3>
+          <p class="distance">📍 0.8 km away • Open until 10:00 PM</p>
+          <ul class="stock-list">
+            <li class="stock-item">
+              <span>Paracetamol 500mg</span>
+              <span class="badge in-stock">In Stock (45)</span>
+            </li>
+            <li class="stock-item">
+              <span>Amoxicillin 250mg</span>
+              <span class="badge low-stock">Low Stock (3)</span>
+            </li>
+          </ul>
+        </div>
+        <button class="btn-reserve" onclick="reserveMedicine('Care Plus Pharmacy')">Reserve Medicine</button>
       </div>
 
-      <div class="flex flex-wrap items-center justify-between gap-3 text-sm text-slate-600 pt-2 border-t border-slate-100">
-        <div class="flex items-center gap-2">
-          <label for="radiusSelect" class="font-medium text-slate-700">Search Radius:</label>
-          <select id="radiusSelect" onchange="handleSearch()" class="p-2 border border-slate-200 rounded-lg outline-none bg-slate-50 text-slate-800 font-semibold">
-            <option value="5" selected>5 km (Nearby Rural/Local)</option>
-            <option value="15">15 km (Semi-Urban Radius)</option>
-            <option value="50">50 km (Regional Radius)</option>
-          </select>
+      <div class="pharmacy-card">
+        <div>
+          <h3>Metro Health Pharma</h3>
+          <p class="distance">📍 1.5 km away • Open 24/7</p>
+          <ul class="stock-list">
+            <li class="stock-item">
+              <span>Paracetamol 500mg</span>
+              <span class="badge out-stock">Out of Stock</span>
+            </li>
+            <li class="stock-item">
+              <span>Ibuprofen 400mg</span>
+              <span class="badge in-stock">In Stock (120)</span>
+            </li>
+          </ul>
         </div>
-
-        <button 
-          onclick="getUserLocation()" 
-          class="flex items-center gap-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-lg transition"
-        >
-          📍 Locate Me
-        </button>
+        <button class="btn-reserve" onclick="reserveMedicine('Metro Health Pharma')">Reserve Medicine</button>
       </div>
-    </div>
 
-    <div class="space-y-2">
-      <h2 class="font-bold text-slate-800 text-lg flex items-center justify-between">
-        <span>Nearby Pharmacy Centers</span>
-        <span id="locationStatus" class="text-xs font-normal text-slate-500">Showing default location</span>
-      </h2>
-      <div id="map" class="h-80 w-full rounded-2xl shadow-sm border border-slate-200 z-0"></div>
-    </div>
-
-    <div class="space-y-3">
-      <h2 class="font-bold text-slate-800 text-lg">Pharmacies & Live Medicine Inventory</h2>
-      <div id="resultsList" class="space-y-4">
+      <div class="pharmacy-card">
+        <div>
+          <h3>City Express Pharmacy</h3>
+          <p class="distance">📍 2.3 km away • Open until 9:00 PM</p>
+          <ul class="stock-list">
+            <li class="stock-item">
+              <span>Amoxicillin 250mg</span>
+              <span class="badge in-stock">In Stock (18)</span>
+            </li>
+            <li class="stock-item">
+              <span>Ibuprofen 400mg</span>
+              <span class="badge low-stock">Low Stock (5)</span>
+            </li>
+          </ul>
         </div>
-    </div>
+        <button class="btn-reserve" onclick="reserveMedicine('City Express Pharmacy')">Reserve Medicine</button>
+      </div>
 
+    </div>
+  </main>
+
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h2>Login to MedConnect</h2>
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <input type="email" id="emailInput" placeholder="Email Address" required />
+        <input type="password" placeholder="Password" required />
+        <button type="submit" class="btn-login" style="width: 100%;">Sign In</button>
+      </form>
+    </div>
   </div>
 
   <script>
-    // --- 1. SETUP DEFAULT LOCATION & MAP ---
-    let userLat = 17.3850;
-    let userLng = 78.4867;
+    let isLoggedIn = false;
 
-    const map = L.map('map').setView([userLat, userLng], 13);
-    
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    const markersGroup = L.layerGroup().addTo(map);
-
-    // --- 2. SAMPLE PHARMACY DATA (RURAL & SEMI-URBAN PHARMACIES) ---
-    const samplePharmacies = [
-      { 
-        id: 1, 
-        name: "Gramin Rural Health Medicals", 
-        areaType: "Rural",
-        phone: "9876543210", 
-        lat: 17.3980, 
-        lng: 78.4900,
-        medicines: [
-          { name: "Paracetamol", stock: 35, unit: "tablets" },
-          { name: "Insulin", stock: 2, unit: "vials" },
-          { name: "ORS Sachet", stock: 50, unit: "packets" },
-          { name: "Amoxicillin", stock: 0, unit: "tablets" }
-        ]
-      },
-      { 
-        id: 2, 
-        name: "Village Lifeline Pharmacy", 
-        areaType: "Rural",
-        phone: "9876512345", 
-        lat: 17.3710, 
-        lng: 78.4720,
-        medicines: [
-          { name: "Paracetamol", stock: 10, unit: "tablets" },
-          { name: "Cetanest", stock: 5, unit: "strips" },
-          { name: "Amoxicillin", stock: 15, unit: "tablets" }
-        ]
-      },
-      { 
-        id: 3, 
-        name: "Township Community Pharmacy", 
-        areaType: "Semi-Urban",
-        phone: "9876567890", 
-        lat: 17.4450, 
-        lng: 78.5467,
-        medicines: [
-          { name: "Paracetamol", stock: 100, unit: "tablets" },
-          { name: "Insulin", stock: 12, unit: "vials" },
-          { name: "Amoxicillin", stock: 40, unit: "tablets" }
-        ]
-      }
-    ];
-
-    // --- 3. DISTANCE CALCULATOR (HAVERSINE IN KM) ---
-    function calculateDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371; 
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a = 
-        Math.sin(dLat/2) * Math.sin(dLat/2) +
-        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-      return R * c; 
-    }
-
-    // --- 4. GEOLOCATION ---
-    function getUserLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            userLat = position.coords.latitude;
-            userLng = position.coords.longitude;
-            
-            map.setView([userLat, userLng], 14);
-            
-            L.marker([userLat, userLng])
-              .addTo(map)
-              .bindPopup('<b>Your Current Location</b>')
-              .openPopup();
-
-            document.getElementById('locationStatus').innerText = "📍 Using your live location";
-            handleSearch();
-          },
-          () => {
-            alert("Unable to fetch location. Displaying default location.");
-          }
-        );
+    // Open & Close Login Modal
+    function toggleAuth() {
+      if (isLoggedIn) {
+        // Logout Logic
+        isLoggedIn = false;
+        document.getElementById('userGreeting').innerText = 'Guest';
+        document.getElementById('authBtn').innerText = 'Login';
+        alert('You have logged out.');
       } else {
-        alert("Geolocation is not supported by your browser.");
+        // Open Modal
+        document.getElementById('loginModal').style.display = 'flex';
       }
     }
 
-    // --- 5. RENDER PHARMACY CARDS WITH STOCK DETAILS ---
-    function displayPharmacies(data) {
-      const container = document.getElementById('resultsList');
-      container.innerHTML = '';
-      markersGroup.clearLayers();
+    function closeModal() {
+      document.getElementById('loginModal').style.display = 'none';
+    }
 
-      if (data.length === 0) {
-        container.innerHTML = `
-          <div class="text-center p-8 bg-white rounded-2xl border border-slate-200 text-slate-500">
-            No rural pharmacy centers found within this range. Try increasing the search radius!
-          </div>`;
+    // Handle Form Submit
+    function handleLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById('emailInput').value;
+      const username = email.split('@')[0]; // Extract name from email for demo
+
+      isLoggedIn = true;
+      document.getElementById('userGreeting').innerText = `Hello, ${username}`;
+      document.getElementById('authBtn').innerText = 'Logout';
+      
+      closeModal();
+      alert('Login successful!');
+    }
+
+    // Reservation Handler
+    function reserveMedicine(pharmacyName) {
+      if (!isLoggedIn) {
+        alert('Please log in first to reserve medicine.');
+        toggleAuth();
         return;
       }
-
-      data.forEach(pharmacy => {
-        const dist = calculateDistance(userLat, userLng, pharmacy.lat, pharmacy.lng).toFixed(1);
-
-        // Map Marker
-        const marker = L.marker([pharmacy.lat, pharmacy.lng]);
-        marker.bindPopup(`
-          <div class="p-1">
-            <b class="text-slate-800">${pharmacy.name}</b><br>
-            <span class="text-xs text-slate-500">${dist} km away (${pharmacy.areaType})</span>
-          </div>
-        `);
-        markersGroup.addLayer(marker);
-
-        // Build Medicine Stock List HTML
-        let stockListHTML = pharmacy.medicines.map(med => {
-          let stockClass = "bg-emerald-50 text-emerald-700 border-emerald-200";
-          let statusText = `${med.stock} ${med.unit}`;
-
-          if (med.stock === 0) {
-            stockClass = "bg-rose-50 text-rose-600 border-rose-200 opacity-60";
-            statusText = "Out of Stock";
-          } else if (med.stock <= 5) {
-            stockClass = "bg-amber-50 text-amber-700 border-amber-200";
-            statusText = `Low (${med.stock} ${med.unit})`;
-          }
-
-          return `
-            <div class="flex items-center justify-between text-xs p-2 rounded-lg border ${stockClass}">
-              <span class="font-semibold">${med.name}</span>
-              <span class="font-bold">${statusText}</span>
-            </div>
-          `;
-        }).join('');
-
-        // Render HTML Card
-        const card = document.createElement('div');
-        card.className = "bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4 hover:border-slate-300 transition";
-        card.innerHTML = `
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-3">
-            <div>
-              <div class="flex items-center gap-2">
-                <h3 class="font-bold text-lg text-slate-800">${pharmacy.name}</h3>
-                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">
-                  ${pharmacy.areaType}
-                </span>
-              </div>
-              <p class="text-sm text-slate-500">📍 <b>${dist} km</b> away from your location</p>
-            </div>
-            
-            <div class="flex items-center gap-2 w-full sm:w-auto">
-              <a href="tel:${pharmacy.phone}" class="flex-1 sm:flex-initial text-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl transition text-xs shadow-sm">
-                📞 Call Center
-              </a>
-              <a href="sms:${pharmacy.phone}?body=Hi,%20I%20need%20medicine%20stock%20confirmation" class="flex-1 sm:flex-initial text-center bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-4 py-2 rounded-xl transition text-xs border border-slate-200">
-                💬 SMS
-              </a>
-            </div>
-          </div>
-
-          <div>
-            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Available Medicine Inventory</h4>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              ${stockListHTML}
-            </div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
+      alert(`Medicine reservation request sent to ${pharmacyName}!`);
     }
 
-    // --- 6. SEARCH & RADIUS FILTER ---
-    function handleSearch() {
-      const query = document.getElementById('searchInput').value.trim().toLowerCase();
-      const maxRadius = parseFloat(document.getElementById('radiusSelect').value);
+    // Live Search Filter Logic
+    function filterPharmacies() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.pharmacy-card');
 
-      const filtered = samplePharmacies.filter(pharmacy => {
-        // Distance Filter (Default 5 km)
-        const dist = calculateDistance(userLat, userLng, pharmacy.lat, pharmacy.lng);
-        if (dist > maxRadius) return false;
-
-        // If no search input, return all in radius
-        if (!query) return true;
-
-        // Filter by pharmacy name or medicine name match
-        const nameMatch = pharmacy.name.toLowerCase().includes(query);
-        const medMatch = pharmacy.medicines.some(
-          m => m.name.toLowerCase().includes(query)
-        );
-
-        return nameMatch || medMatch;
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (text.includes(query)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
       });
-
-      displayPharmacies(filtered);
     }
-
-    // Initialize list on load
-    displayPharmacies(samplePharmacies);
   </script>
 </body>
 </html>

@@ -595,11 +595,12 @@ body {
   padding-top: 70px;
 }
 
-.footer-grid {
-  display: grid;
-  grid-template-columns: 2fr repeat(3, 1fr);
-  gap: 3rem;
-  margin-bottom: 50px;
+.footer-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1fr;
+    gap:40px;
+    align-items:flex-start;
+    width:100%;
 }
 
 .footer-logo {
@@ -629,12 +630,7 @@ body {
 
 .footer-email a:hover{
     color:#60A5FA;
-}
-
-.social-links a:hover {
-  background-color: var(--primary-color);
-}
-
+}s
 .footer-col h4 {
   color: #ffffff;
   font-size: 1.1rem;

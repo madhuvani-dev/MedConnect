@@ -14,9 +14,10 @@ def init_database():
     username TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL
 )''')
-
-
-
+    #creating admin
+    cursor.execute('''INSERT OR IGNORE INTO admin (id, username, password)
+VALUES
+(1, 'admin', 'admin123')''')
     #users table
     cursor.execute('''CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -1,100 +1,480 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MedConnect - Patient Portal</title>
-  <link rel="stylesheet" href="static/css/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedConnect | Connecting Patients With Trusted Pharmacies</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/home.css') }}">
 </head>
 <body>
-
-  <div class="intro-screen">
-    <h1 class="intro-title">MedConnect</h1>
-    <p class="intro-tagline">Healthcare Made Simple & Accessible</p>
-  </div>
-
-  <main class="main-container">
-    
-    <div class="brand-header">
-      <h2>MedConnect</h2>
-      <p>Patient Portal Access</p>
-    </div>
-
-    <div class="card">
-      
-      <div class="tab-container">
-        <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
-        <button class="tab-btn" id="tabRegister" onclick="switchTab('register')">Create Account</button>
+<!-- ================= NAVBAR ================= -->
+<header class="navbar" id="navbar">
+    <div class="container nav-container">
+        <a href="/" class="brand-logo">
+            <i class="fa-solid fa-heart-pulse"></i>
+            Med<span>Connect</span>
+        </a>
+        <nav class="nav-menu" id="nav-menu">
+            <a href="#home" class="nav-link active">
+                Home
+            </a>
+            <a href="#features" class="nav-link">
+                Features
+            </a>
+            <a href="#how" class="nav-link">
+                How It Works
+            </a>
+            <a href="#about" class="nav-link">
+                About
+            </a>
+            <a href="#faq" class="nav-link">
+                FAQ
+            </a>
+            <div class="nav-mobile-btns">
+                <a href="/login" class="btn-secondary">
+                Login
+                </a>
+                <a href="/register" class="btn-primary">
+                    Register
+                </a>
+            </div>
+        </nav>
+        <div class="nav-auth-desktop">
+            <a href="/login" class="btn-secondary">
+                Login
+            </a>
+            <a href="/register" class="btn-primary">
+                Get Started
+            </a>
+        </div>
+        <button class="mobile-toggle"
+                id="mobile-toggle"
+                aria-label="Toggle Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
       </div>
-
-      <form id="loginForm" class="form-section active" onsubmit="handleAuth(event, 'Login')">
-        <div class="form-group">
-          <label for="loginEmail">Email Address</label>
-          <input type="email" id="loginEmail" placeholder="e.g. alex@example.com" required />
+</header>
+<!-- ================= HERO SECTION ================= -->
+<section class="hero-section" id="home">
+<div class="container hero-container">
+<div class="hero-text">
+<span class="badge">
+<i class="fa-solid fa-shield-halved"></i>
+Trusted Healthcare Platform
+</span>
+<h1>
+Connecting Patients With 
+<span>Trusted Pharmacies</span>
+</h1>
+<p>
+MedConnect helps patients find medicines, connect with verified pharmacies,
+and access healthcare services through a secure digital platform.
+</p>
+<div class="hero-actions">
+<a href="/register"
+class="btn-primary btn-large">
+<i class="fa-solid fa-user-plus"></i>
+Register as Patient
+</a>
+<a href="/pharmacy/register"
+class="btn-outline btn-large">
+<i class="fa-solid fa-store"></i>
+Register Pharmacy
+</a>
+</div>
+<div class="hero-stats">
+<div class="stat-item">
+<h3>
+Verified
+</h3>
+<p>
+Pharmacies
+</p>
+</div>
+<div class="stat-divider"></div>
+<div class="stat-item">
+<h3>
+Secure
+</h3>
+<p>
+Healthcare Data
+</p>
+</div>
+<div class="stat-divider"></div>
+<div class="stat-item">
+<h3>
+Easy
+</h3>
+<p>
+Medicine Access
+</p>
+</div>
+</div>
+</div>
+<div class="hero-image-wrapper">
+<img src="https://images.unsplash.com/photo-1580281657527-47f249e8f4df?auto=format&fit=crop&w=800&q=80"
+alt="Healthcare and pharmacy service"
+class="main-hero-img">
+<div class="floating-card flex-card-1">
+<i class="fa-solid fa-circle-check text-success"></i>
+<div>
+<h4>
+Verified Pharmacy
+</h4>
+<p>
+Trusted Healthcare Partner
+</p>
+</div>
+</div>
+<div class="floating-card flex-card-2">
+<i class="fa-solid fa-lock text-primary"></i>
+<div>
+<h4>
+Secure Platform
+</h4>
+<p>
+Protected User Data
+</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ================= FEATURES SECTION ================= -->
+<section class="features-section" id="features">
+    <div class="container">
+        <div class="section-header">
+            <h2>
+                Designed For Better Healthcare Access
+            </h2>
+            <p>
+                MedConnect simplifies healthcare by connecting patients
+                with trusted pharmacy partners through a secure platform.
+            </p>
         </div>
-
-        <div class="form-group">
-          <label for="loginPassword">Password</label>
-          <input type="password" id="loginPassword" placeholder="••••••••" required />
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <h3>
+                    Medicine Availability
+                </h3>
+                <p>
+                    Find required medicines and connect with pharmacies
+                    easily through one platform.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h3>
+                    Verified Pharmacies
+                </h3>
+                <p>
+                    Registered pharmacies are verified before joining
+                  the MedConnect network.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <h3>
+                    Secure Accounts
+                </h3>
+                <p>
+                    Patient and pharmacy information is protected
+                  with secure authentication.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                </div>
+                <h3>
+                    Healthcare Support
+                </h3>
+                <p>
+                    A simple connection between people and healthcare
+                    services when they need it.
+                </p>
+            </div>
         </div>
-
-        <button type="submit" class="btn-submit">Login</button>
-      </form>
-
-      <form id="registerForm" class="form-section" onsubmit="handleAuth(event, 'Registration')">
-        <div class="form-group">
-          <label for="regName">Full Name</label>
-          <input type="text" id="regName" placeholder="e.g. Alex Johnson" required />
-        </div>
-
-        <div class="form-group">
-          <label for="regPhone">Contact Number</label>
-          <input type="tel" id="regPhone" placeholder="e.g. +1 555-0192" required />
-        </div>
-
-        <div class="form-group">
-          <label for="regEmail">Email Address</label>
-          <input type="email" id="regEmail" placeholder="alex@example.com" required />
-        </div>
-
-        <div class="form-group">
-          <label for="regPassword">Password</label>
-          <input type="password" id="regPassword" minlength="6" placeholder="At least 6 characters" required />
-        </div>
-
-        <button type="submit" class="btn-submit">Register as Patient</button>
-      </form>
-
     </div>
-  </main>
-
-  <script>
-    // Tab Toggle Logic
-    function switchTab(tab) {
-      const loginTab = document.getElementById('tabLogin');
-      const regTab = document.getElementById('tabRegister');
-      const loginForm = document.getElementById('loginForm');
-      const regForm = document.getElementById('registerForm');
-
-      if (tab === 'login') {
-        loginTab.classList.add('active');
-        regTab.classList.remove('active');
-        loginForm.classList.add('active');
-        regForm.classList.remove('active');
-      } else {
-        regTab.classList.add('active');
-        loginTab.classList.remove('active');
-        regForm.classList.add('active');
-        loginForm.classList.remove('active');
-      }
-    }
-
-    // Form Action Handling
-    function handleAuth(event, type) {
-      event.preventDefault();
-      alert(`${type} successful! Redirecting to Patient Dashboard...`);
-    }
-  </script>
-
+</section>
+<!-- ================= HOW IT WORKS ================= -->
+<section class="how-section" id="how">
+<div class="container">
+<div class="section-header">
+<h2>
+How MedConnect Works
+</h2>
+<p>
+Simple steps to connect patients and pharmacies.
+</p>
+</div>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-icon">
+<i class="fa-solid fa-user-plus"></i>
+</div>
+<h3>
+Create Account
+</h3>
+<p>
+Patients and pharmacies can register
+with their details securely.
+</p>
+</div>
+<div class="step-card">
+<div class="step-icon">
+<i class="fa-solid fa-link"></i>
+</div>
+<h3>
+Connect
+</h3>
+<p>
+Patients connect with verified
+pharmacy partners.
+</p>
+</div>
+<div class="step-card">
+<div class="step-icon">
+<i class="fa-solid fa-hand-holding-medical"></i>
+</div>
+<h3>
+Get Healthcare Support
+</h3>
+<p>
+Access medicines and healthcare
+services conveniently.
+</p>
+</div>
+</div>
+</div>
+</section>
+<!-- ================= ABOUT SECTION ================= -->
+<section class="about-section" id="about">
+<div class="container about-container">
+<div class="about-image">
+<img src="https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&w=800&q=80"
+alt="Healthcare professionals">
+</div>
+<div class="about-content">
+<span class="badge">
+About MedConnect
+</span>
+<h2>
+Bridging The Gap Between Patients And Pharmacies
+</h2>
+<p>
+MedConnect is a smart healthcare platform designed to make medicine
+access easier by connecting patients with trusted and verified pharmacies.
+</p>
+<ul class="about-list">
+<li>
+<i class="fa-solid fa-circle-check"></i>
+Verified pharmacy registration
+</li>
+<li>
+<i class="fa-solid fa-circle-check"></i>
+Secure patient accounts
+</li>
+<li>
+<i class="fa-solid fa-circle-check"></i>
+Simple and reliable healthcare connection
+</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- ================= FAQ SECTION ================= -->
+<section class="faq-section" id="faq">
+    <div class="container">
+        <div class="section-header">
+            <h2>
+                Frequently Asked Questions
+            </h2>
+            <p>
+                Learn more about MedConnect.
+            </p>
+        </div>
+        <div class="faq-accordion">
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>
+                        What is MedConnect?
+                    </span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        MedConnect is a healthcare platform that connects
+                        patients with verified pharmacies to make medicine
+                        access simpler and more reliable.
+                    </p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>
+                        How can patients use MedConnect?
+                    </span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Patients can create an account, connect with
+                        registered pharmacies, and access healthcare
+                        services through the platform.
+                    </p>
+                  </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>
+                        How can pharmacies join MedConnect?
+                    </span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Pharmacies can register by providing their details.
+                        After admin verification, approved pharmacies can
+                        access the platform.
+                    </p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>
+                        Is my information secure?
+                    </span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Yes. MedConnect uses secure authentication methods
+                      to protect user information and maintain privacy.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ================= CTA SECTION ================= -->
+<section class="cta-section">
+<div class="container cta-container">
+<h2>
+Ready To Connect With Better Healthcare?
+</h2>
+<p>
+Join MedConnect and experience a simpler way to access healthcare services.
+</p>
+<a href="/register" class="btn-primary btn-large btn-light">
+<i class="fa-solid fa-user-plus"></i>
+Create Account
+</a>
+</div>
+</section>
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+<div class="container footer-grid">
+<div class="footer-col brand-col">
+<a href="/" class="brand-logo footer-logo">
+<i class="fa-solid fa-heart-pulse"></i>
+Med<span>Connect</span>
+</a>
+<p>
+Connecting patients and pharmacies
+through secure healthcare solutions.
+</p>
+<div class="footer-col">
+<h4>
+Quick Links
+</h4>
+<ul>
+<li>
+<a href="#home">
+Home
+</a>
+</li>
+<li>
+<a href="#features">
+Features
+</a>
+</li>
+<li>
+<a href="#how">
+How It Works
+</a>
+</li>
+<li>
+<a href="#about">
+About
+</a>
+</li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>
+Services
+</h4>
+<ul>
+<li>
+<a href="#">
+Medicine Access
+</a>
+</li>
+<li>
+<a href="#">
+Verified Pharmacies
+</a>
+</li>
+<li>
+<a href="#">
+Secure Platform
+</a>
+</li>
+<li>
+<a href="#">
+Healthcare Support
+</a>
+</li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>
+Contact
+</h4>
+<ul>
+<li>
+<div class="footer-email">
+    <a href="mailto:support@medconnect.com">
+        📧 support@medconnect.com
+    </a>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="footer-bottom">
+<div class="container">
+<p>
+© 2026 MedConnect. All rights reserved.
+</p>
+</div>
+</div>
+</footer>
+<script src="{{ url_for('static', filename='js/landing.js') }}"></script>
 </body>
 </html>

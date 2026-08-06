@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedConnect - Register Pharmacy</title>
+  <link rel="stylesheet" href="{{url_for('static' ,filename ='css/pharmacy.css') }}"/>
+</head>
+<body>
+
+  <header>
+    <a href="login.html" class="brand-logo">
+      <div class="brand-icon">+</div>
+      <span class="brand-text">MedConnect</span>
+    </a>
+    <span class="portal-tag">Pharmacy Portal</span>
+  </header>
+
+  <main class="container">
+    <div class="card card-auth">
+      <nav class="auth-nav">
+        <a href="login.html">Login</a>
+        <a href="register.html" class="active">Register</a>
+      </nav>
+
+      <h1 class="form-title">Pharmacy Registration</h1>
+      <p class="form-subtitle">Submit your business license details for verification.</p>
+
+     <form id="registerForm">
+
+    <div class="form-group">
+        <label for="shopName">Pharmacy Business Name</label>
+        <input
+            type="text"
+            id="shopName"
+            placeholder="CarePlus Pharmacy"
+            required
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="ownerName">Owner Name</label>
+        <input
+            type="text"
+            id="ownerName"
+            placeholder="John Smith"
+            required
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Contact Number</label>
+        <input
+            type="tel"
+            id="phone"
+            placeholder="+91 9876543210"
+            required
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="license">Drug License Number</label>
+        <input
+            type="text"
+            id="license"
+            placeholder="DL-2026-TG9988"
+            required
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="address">Pharmacy Address</label>
+        <textarea
+            id="address"
+            rows="3"
+            placeholder="Hyderabad, Telangana"
+            required
+        ></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+            type="email"
+            id="email"
+            placeholder="careplus@gmail.com"
+            required
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input
+            type="password"
+            id="password"
+            minlength="6"
+            required
+        >
+    </div>
+
+    <button type="submit" class="btn-primary">
+        Submit Application
+    </button>
+
+</form>
+    </div>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/pharmacy.js') }}"></script>
+</body>
+</html>

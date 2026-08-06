@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedConnect - Pharmacy Login</title>
+  <link rel="stylesheet" href="static/css/pharmacy.css"/>
+</head>
+<body>
+
+  <header>
+    <a href="login.html" class="brand-logo">
+      <div class="brand-icon">+</div>
+      <span class="brand-text">MedConnect</span>
+    </a>
+    <span class="portal-tag">Pharmacy Portal</span>
+  </header>
+
+  <main class="container">
+    <div class="card card-auth">
+      <nav class="auth-nav">
+        <a href="login.html" class="active">Login</a>
+        <a href="register.html">Register</a>
+      </nav>
+
+      <h1 class="form-title">Welcome Back</h1>
+      <p class="form-subtitle">Enter your pharmacy credentials to manage inventory.</p>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" placeholder="admin@pharmacy.com" required />
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required />
+        </div>
+
+        <button type="submit" class="btn-primary">Sign In to Account</button>
+      </form>
+    </div>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/pharmacy.js') }}"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify, session, render_template
 from database.db import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -10,19 +10,19 @@ pharmacy = Blueprint("pharmacy", __name__)
 # Pharmacy Registration
 # ==========================
 
+@pharmacy.route("/pharmacy/register", methods=["GET"])
+def pharmacy_register_page():
+    return render_template("pharmacy/register.html")
 @pharmacy.route("/pharmacy/register", methods=["POST"])
 def pharmacy_register():
 
-    data = request.get_json()
-
-
-    shop_name = data["shop_name"]
-    owner_name = data["owner_name"]
-    email = data["email"]
-    password = data["password"]
-    phone = data["phone"]
-    dl_number = data["dl_number"]
-    address = data["address"]
+    shop_name = request.form["shop_name"]
+    owner_name = request.form["owner_name"]
+    email = request.form["email"]
+    password = request.form["password"]
+    phone = request.form["phone"]
+    dl_number = request.form["dl_number"]
+    address = request.form["address"]
 
 
     hashed_password = generate_password_hash(password)
@@ -30,7 +30,6 @@ def pharmacy_register():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-
 
     try:
 

@@ -16,13 +16,15 @@ def pharmacy_register_page():
 @pharmacy.route("/pharmacy/register", methods=["POST"])
 def pharmacy_register():
 
-    shop_name = request.form["shop_name"]
-    owner_name = request.form["owner_name"]
-    email = request.form["email"]
-    password = request.form["password"]
-    phone = request.form["phone"]
-    dl_number = request.form["dl_number"]
-    address = request.form["address"]
+    data = request.get_json()
+
+    shop_name = data["shop_name"]
+    owner_name = data["owner_name"]
+    email = data["email"]
+    password = data["password"]
+    phone = data["phone"]
+    dl_number = data["dl_number"]
+    address = data["address"]
 
 
     hashed_password = generate_password_hash(password)

@@ -3,6 +3,7 @@ from database.db import get_db_connection
 from routes.auth import auth
 from routes.pharmacy import pharmacy
 from routes.admin import admin
+from routes.user import user
 
 # Create Flask application
 app = Flask(__name__)
@@ -12,6 +13,7 @@ app.secret_key = "medconnect_secret_key"
 app.register_blueprint(auth)
 app.register_blueprint(pharmacy)
 app.register_blueprint(admin)
+app.register_blueprint(user)
 
 # Home Page
 @app.route("/")

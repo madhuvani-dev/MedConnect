@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify, session , render_template
 from database.db import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -106,20 +106,21 @@ def user_login():
     ):
 
 
+        
+
+
         session["user_id"] = user["id"]
 
-
         return jsonify({
-
-            "message":"Login successful",
-            "user":user["full_name"]
-
-        })
-
-
-
+            "message": "Login successful",
+            "user": user["full_name"],
+            "redirect": "/user/dashboard"
+        }), 200
     return jsonify({
 
         "error":"Invalid email or password"
 
     }),401
+@auth.route("/user/login", methods=["GET"])
+def user_login_page():
+    return render_template("user/login.html")
